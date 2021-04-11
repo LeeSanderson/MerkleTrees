@@ -1,0 +1,36 @@
+﻿@using MerkleTrees.Core
+@model MerkleTrees.Web.Services.IMerkelTreeStore
+
+@{
+    ViewData["Title"] = "Home Page";
+    var treeCount = 0;
+}
+
+<ul>
+    @await foreach (var tree in Model.AllAsync())
+    {
+        treeCount++;
+        <li>
+            @tree.FileName
+            <ul>
+                @for (var i = 0; i < tree.PieceCount; i++)
+                {
+                    <li>
+                        <a asp-controller="Home" asp-action="Piece" asp-route-hash="@tree.Root.Hash.ToHexString()" asp-route-piece="@i">@i</a>
+                    </li>
+                }
+            </ul>
+        </li>
+    }
+</ul>
+
+@if (treeCount == 0)
+{
+    <div class="alert alert-danger" role="alert">
+        No Trees - make sure Files directory contains a file or start the app with a valid file path.
+    </div>
+}
+else
+{
+    <a asp-controller="Home" asp-action="Hashes">Hashes</a>
+}
